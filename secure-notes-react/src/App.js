@@ -22,6 +22,7 @@ import Footer from "./components/Footer/Footer";
 import DataUpload from "./components/DataUpload/DataUpload";
 import Service from "./components/aboutPage/Service";
 import PrivacyPolicy from "./components/aboutPage/PrivacyPolicy";
+import AuthDataUpload from "./components/DataUpload/AuthDataUpload";
 
 const App = () => {
   return (
@@ -45,6 +46,15 @@ const App = () => {
           element={
             <ProtectedRoute>
               <DataUpload />
+            </ProtectedRoute>
+          }
+        />
+
+       <Route
+          path="/auth-data"
+          element={
+            <ProtectedRoute>
+              <AuthDataUpload />
             </ProtectedRoute>
           }
         />

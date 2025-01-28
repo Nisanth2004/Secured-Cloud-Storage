@@ -31,15 +31,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -176,6 +176,25 @@ public class AuthController {
     public String currentUserName(@AuthenticationPrincipal UserDetails userDetails) {
         return (userDetails != null) ? userDetails.getUsername() : "";
     }
+
+
+    // data upload validation
+    @PostMapping("/public/validate-password")
+    public ResponseEntity<?> validatePassword(@RequestBody Map<String, String> request) {
+        String password = request.get("password");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            if (passwordEncoder.matches(password, userDetails.getPassword())) {
+                return ResponseEntity.ok(Collections.singletonMap("valid", true));
+            }
+        }
+        return ResponseEntity.ok(Collections.singletonMap("valid", false));
+    }
+
+
 
 
     @PostMapping("/public/forgot-password")

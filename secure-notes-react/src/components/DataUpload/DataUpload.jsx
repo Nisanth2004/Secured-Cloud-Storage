@@ -1,180 +1,108 @@
-import React, { useState } from "react";
-import { FaCloudUploadAlt, FaLock, FaKey, FaWifi, FaFileAlt } from "react-icons/fa";
-import { MdVpnKey } from "react-icons/md";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const DataUpload = () => {
-  const [formData, setFormData] = useState({
-    ipAddress: "",
-    data: "",
-    oldPassword: "",
-    newPassword: "",
-  });
+  const [file, setFile] = useState(null);
+  const [filename, setFilename] = useState('');
+  const [message, setMessage] = useState('');
 
-  const [decryptedData, setDecryptedData] = useState("");
-  const [showModal, setShowModal] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleFilenameChange = (e) => {
+    setFilename(e.target.value);
+  };
+
+  const uploadFile = async (e) => {
     e.preventDefault();
-    const { ipAddress, data, oldPassword, newPassword } = formData;
+    if (!file) {
+      setMessage('Please select a file to upload.');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
 
-    const payload = `data=${data}&password=${oldPassword}&new_password=${newPassword}`;
-    const url = `http://${ipAddress}/upload`;
-
-    fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: payload,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert("Response: " + data.status);
-      })
-      .catch((error) => console.error("Error:", error));
+    try {
+      const response = await axios.post('http://192.168.46.254:5006/upload', formData);
+      setMessage(response.data); // Backend success message
+    } catch (error) {
+      setMessage('Error uploading file: ' + (error.response?.data || error.message));
+    }
   };
 
-  const handleDecrypt = () => {
-    const { ipAddress } = formData;
-    const password = prompt("Enter the password to decrypt the data:");
+  const downloadFile = async (e) => {
+    e.preventDefault();
+    if (!filename) {
+      setMessage('Please enter a filename to download.');
+      return;
+    }
 
-    if (password) {
-      const url = `http://${ipAddress}/decrypt?plain=${password}`;
+    try {
+      const response = await axios.get(`http://192.168.46.254:5006/download`, {
+        params: { filename },
+        responseType: 'blob',
+      });
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "Password correct") {
-            setDecryptedData(data.data);
-            setShowModal(true);
-          } else {
-            alert(data.status);
-          }
-        })
-        .catch((error) => console.error("Error:", error));
+      // Create a URL for downloading
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      setMessage(`File "${filename}" downloaded successfully!`);
+    } catch (error) {
+      setMessage('Error downloading file: ' + (error.response?.data || error.message));
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="max-w-md w-full bg-gray-100 rounded-xl shadow-lg p-6 text-gray-900">
-        <h1 className="text-2xl font-bold text-center mb-4 text-blue-600">
-          <FaCloudUploadAlt className="inline-block text-blue-600 mr-2" />
-          Data Upload
-        </h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="ipAddress" className="block text-sm font-semibold text-gray-700 mb-1">
-              <FaWifi className="inline-block mr-2" />
-              IP Address
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="ipAddress"
-                name="ipAddress"
-                className="w-full p-2 pl-10 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Enter IP address"
-                value={formData.ipAddress}
-                onChange={handleChange}
-                required
-              />
-              <FaWifi className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-green-50 flex items-center justify-center p-6">
+      <div className="max-w-lg w-full bg-white shadow-2xl rounded-3xl p-8">
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">Pi File Manager</h1>
 
-          <div className="mb-3">
-            <label htmlFor="data" className="block text-sm font-semibold text-gray-700 mb-1">
-              <FaFileAlt className="inline-block mr-2" />
-              Data
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="data"
-                name="data"
-                className="w-full p-2 pl-10 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Enter data"
-                value={formData.data}
-                onChange={handleChange}
-                required
-              />
-              <FaFileAlt className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400" />
-            </div>
+        <form onSubmit={uploadFile} className="mb-8">
+          <div className="mb-6">
+            <label className="block text-lg text-white-700 font-medium mb-3">Upload File</label>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              required
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300"
+            />
           </div>
-
-          <div className="mb-3">
-            <label htmlFor="oldPassword" className="block text-sm font-semibold text-gray-700 mb-1">
-              <FaKey className="inline-block mr-2" />
-              Previous Password
-            </label>
-            <div className="relative">
-              <input
-                type="password"
-                id="oldPassword"
-                name="oldPassword"
-                className="w-full p-2 pl-10 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Enter old password"
-                value={formData.oldPassword}
-                onChange={handleChange}
-                required
-              />
-              <FaKey className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 mb-1">
-              <MdVpnKey className="inline-block mr-2" />
-              New Password
-            </label>
-            <div className="relative">
-              <input
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                className="w-full p-2 pl-10 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Enter new password"
-                value={formData.newPassword}
-                onChange={handleChange}
-                required
-              />
-              <MdVpnKey className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
-
           <button
-  type="submit"
-  className="w-full py-2 border border-blue-600 text-blue-600 font-bold rounded-md hover:bg-blue-600 hover:text-white transition-transform transform hover:scale-105"
->
-  <FaCloudUploadAlt className="mr-1" /> Upload Data
-</button>
+            type="submit"
+            className="w-full bg-green-600 text-white text-lg font-semibold py-3 px-5 rounded-lg shadow-md hover:bg-blue-700 transition-transform transform hover:scale-105"
+          >
+            Upload File
+          </button>
         </form>
 
-        <button
-  onClick={handleDecrypt}
-  className="w-full mt-3 py-2 border border-green-600 text-green-600 font-bold rounded-md hover:bg-green-600 hover:text-white transition-transform transform hover:scale-105"
->
-  <FaLock className="mr-1" /> Decrypt Data
-</button>
+        <form onSubmit={downloadFile} className="mb-8">
+          <div className="mb-6">
+            <label className="block text-lg text-gray-700 font-medium mb-3">Download File</label>
+            <input
+              type="text"
+              value={filename}
+              onChange={handleFilenameChange}
+              placeholder="Enter filename to download"
+              required
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-green-300"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white text-lg font-semibold py-3 px-5 rounded-lg shadow-md hover:bg-green-700 transition-transform transform hover:scale-105"
+          >
+            Download File
+          </button>
+        </form>
 
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">
-                Decrypted Data
-              </h2>
-              <p className="text-gray-700">{decryptedData}</p>
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-red-500 text-white py-2 px-4 rounded mt-4"
-              >
-                Close
-              </button>
-            </div>
+        {message && (
+          <div className="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-700 rounded-lg">
+            {message}
           </div>
         )}
       </div>

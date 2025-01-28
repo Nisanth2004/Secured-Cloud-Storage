@@ -52,7 +52,6 @@ public class SecurityConfig {
                 csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers("/api/auth/public/**")
         );
-
         http.cors(withDefaults());
         //http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((requests)
