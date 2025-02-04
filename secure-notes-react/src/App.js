@@ -24,6 +24,8 @@ import Service from "./components/aboutPage/Service";
 import PrivacyPolicy from "./components/aboutPage/PrivacyPolicy";
 import AuthDataUpload from "./components/DataUpload/AuthDataUpload";
 
+import FileUploadDownload from "./components/DataUpload/FileUploadDownload";
+
 const App = () => {
   return (
     <Router>
@@ -55,6 +57,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AuthDataUpload />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/auth"
+          element={
+            <ProtectedRoute>
+                 <FileUploadDownload/>
             </ProtectedRoute>
           }
         />
