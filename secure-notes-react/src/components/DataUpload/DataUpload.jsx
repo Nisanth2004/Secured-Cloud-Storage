@@ -24,7 +24,7 @@ const DataUpload = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://192.168.46.254:5006/upload', formData);
+      const response = await axios.post('http://192.168.67.254:5006/upload', formData);
       setMessage(response.data); // Backend success message
     } catch (error) {
       setMessage('Error uploading file: ' + (error.response?.data || error.message));
@@ -39,7 +39,7 @@ const DataUpload = () => {
     }
 
     try {
-      const response = await axios.get(`http://192.168.46.254:5006/download`, {
+      const response = await axios.get(`http://192.168.67.254:5006/download`, {
         params: { filename },
         responseType: 'blob',
       });
