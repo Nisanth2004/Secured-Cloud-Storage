@@ -72,6 +72,16 @@ const Navbar = () => {
             </li>
           </Link>
 
+          <Link to="/download">
+            <li
+              className={`${
+                pathName === "/download" ? "font-semibold " : ""
+              } py-2 cursor-pointer hover:text-slate-300`}
+            >
+              Download
+            </li>
+          </Link>
+
           <Link to="/about">
             <li
               className={`py-2 cursor-pointer hover:text-slate-300 ${

@@ -25,6 +25,8 @@ import PrivacyPolicy from "./components/aboutPage/PrivacyPolicy";
 
 
 import FileUploadDownload from "./components/DataUpload/FileUploadDownload";
+import FileUpload from "./components/DataUpload/FileUpload";
+import FileDownload from "./components/DataUpload/FileDownload";
 
 const App = () => {
   return (
@@ -51,6 +53,23 @@ const App = () => {
           element={
             <ProtectedRoute>
                  <FileUploadDownload/>
+            </ProtectedRoute>
+          }
+        />
+
+<Route
+          path="/download"
+          element={
+            <ProtectedRoute>
+                 <FileDownload/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute>
+           <FileUpload/>
             </ProtectedRoute>
           }
         />
