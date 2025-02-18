@@ -48,14 +48,7 @@ const App = () => {
         
 
        
-        <Route
-          path="/auth"
-          element={
-            <ProtectedRoute>
-                 <FileUploadDownload/>
-            </ProtectedRoute>
-          }
-        />
+     
 
 <Route
           path="/download"
