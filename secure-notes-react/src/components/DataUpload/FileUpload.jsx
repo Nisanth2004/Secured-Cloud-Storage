@@ -12,7 +12,7 @@ const FileUpload = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0); // State for progress bar
-
+  const SERVER_IP = "http://192.168.149.254:5006";
   useEffect(() => {
     setPassword(nanoid(4));
   }, []);
@@ -44,7 +44,7 @@ const FileUpload = () => {
     const toastId = toast.loading("Uploading...");
 
     try {
-      await axios.post("http://192.168.135.254:5006/upload", formData, {
+      await axios.post(`${SERVER_IP}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {

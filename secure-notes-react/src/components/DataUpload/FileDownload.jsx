@@ -9,6 +9,8 @@ const FileDownload = () => {
   const [downloadFileName, setDownloadFileName] = useState("");
   const [fileList, setFileList] = useState([]);
 
+  const SERVER_IP = "http://192.168.149.254:5006";
+
   useEffect(() => {
     if (currentUser) {
       fetchFileList();
@@ -18,7 +20,7 @@ const FileDownload = () => {
   const fetchFileList = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.135.254:5006/list-files/${currentUser.username}`
+        `${SERVER_IP}/list-files/${currentUser.username}`
       );
       setFileList(response.data.files);
     } catch (error) {
@@ -34,7 +36,7 @@ const FileDownload = () => {
 
     try {
       const response = await axios.get(
-        `http://192.168.135.254:5006/download/${currentUser.username}/${downloadFileName}`,
+        `${SERVER_IP}/download/${currentUser.username}/${downloadFileName}`,
         { responseType: "blob" }
       );
 

@@ -27,6 +27,7 @@ import PrivacyPolicy from "./components/aboutPage/PrivacyPolicy";
 import FileUploadDownload from "./components/DataUpload/FileUploadDownload";
 import FileUpload from "./components/DataUpload/FileUpload";
 import FileDownload from "./components/DataUpload/FileDownload";
+import FileListTable from "./components/DataUpload/FileListTable";
 
 const App = () => {
   return (
@@ -79,6 +80,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AllNotes />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/file-list"
+          element={
+            <ProtectedRoute>
+              <FileListTable />
             </ProtectedRoute>
           }
         />
