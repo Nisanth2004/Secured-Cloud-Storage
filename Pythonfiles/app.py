@@ -2,7 +2,6 @@ import os
 import time
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 import serial  # For UART communication with ESP8266
 # Initialize Flask app
 app = Flask(__name__)
@@ -61,14 +60,19 @@ def upload_file():
 # Route to list all files in a user's folder
 @app.route('/list-files/<username>', methods=['GET'])
 def list_files(username):
+    """Lists files for a user. All users can also see admin's files."""
+    
     user_folder = os.path.join(app.config['UPLOAD_FOLDER'], username)
+    admin_folder = os.path.join(app.config['UPLOAD_FOLDER'], 'admin')  # Admin files
 
-    if not os.path.exists(user_folder):
-        return jsonify({"error": "User folder not found"}),404
+    user_files = os.listdir(user_folder) if os.path.exists(user_folder) else []
+    admin_files = os.listdir(admin_folder) if os.path.exists(admin_folder) else []
 
-    files = os.listdir(user_folder)
-    return jsonify({"files":files})
-
+    if username == "admin":
+        return jsonify({"files": user_files})  # Admin sees only admin files
+    
+    # Other users see their own files + admin's files
+    return jsonify({"files": user_files + admin_files})
 # ✅ **Your Download Route**
 @app.route("/download/<username>/<filename>", methods=["GET"])
 def download_file(username, filename):
@@ -81,6 +85,29 @@ def download_file(username, filename):
         return send_from_directory(user_folder, filename, as_attachment=True)
 
     return "File not found", 404
+# Route to list all files in a user's folder
+@app.route('/list-files/user/<username>', methods=['GET'])
+def list_user_files(username):  # Renamed function
+    user_folder = os.path.join(app.config['UPLOAD_FOLDER'], username)
+
+    if not os.path.exists(user_folder):
+        return jsonify({"error": "User folder not found"}), 404
+
+    files = os.listdir(user_folder)
+    return jsonify({"files": files})
+
+@app.route("/delete/<username>/<filename>", methods=["DELETE"])
+def delete_file(username, filename):
+    """Allows users to delete their own files"""
+    user_folder = os.path.join(app.config["UPLOAD_FOLDER"], username)
+    file_path = os.path.join(user_folder, filename)
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print(f"\n🗑 *User '{username}' deleted file: {filename}*")
+        return jsonify({"message": f"File '{filename}' deleted successfully!"})
+    
+    return jsonify({"error": "File not found"}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5006,threaded=True)
