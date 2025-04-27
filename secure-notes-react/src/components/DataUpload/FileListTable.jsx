@@ -7,7 +7,7 @@ import { useTable } from "react-table";
 const FileListTable = () => {
   const { currentUser } = useMyContext();
   const [fileList, setFileList] = useState([]);
-  const SERVER_IP = "http://192.168.149.254:5006";
+  const SERVER_IP = "https://forge-okay-requiring-marriage.trycloudflare.com";
   useEffect(() => {
     if (currentUser) {
       fetchFileList();

@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { useMyContext } from "../../store/ContextApi";
 import { useEffect } from "react";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl ='https://cloudservice-o9kh.onrender.com';
 
 const Login = () => {
   // Step 1: Login method and Step 2: Verify 2FA

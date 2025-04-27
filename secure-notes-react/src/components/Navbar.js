@@ -69,8 +69,7 @@ const Navbar = () => {
                   Upload File
                 </li>
               </Link>
-            </>
-          )}
+          
    <Link to="/download">
             <li
               className={`${
@@ -83,12 +82,15 @@ const Navbar = () => {
           <Link to="/file-list">
             <li
               className={`${
-                pathName === "/download" ? "font-semibold " : ""
+                pathName === "/file-list" ? "font-semibold " : ""
               } py-2 cursor-pointer hover:text-slate-300`}
             >
               My Files
             </li>
           </Link>
+
+          </>
+          )}
           <Link to="/contact">
             <li
               className={`${

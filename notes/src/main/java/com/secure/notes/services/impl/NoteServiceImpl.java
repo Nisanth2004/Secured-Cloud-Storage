@@ -4,12 +4,14 @@ import com.secure.notes.models.Note;
 import com.secure.notes.repositories.NoteRepository;
 import com.secure.notes.services.AuditLogService;
 import com.secure.notes.services.NoteService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class NoteServiceImpl implements NoteService {
 
     @Autowired
@@ -48,6 +50,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+
     public List<Note> getNotesForUser(String username) {
         List<Note> personalNotes = noteRepository
                 .findByOwnerUsername(username);

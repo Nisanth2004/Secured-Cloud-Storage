@@ -4,7 +4,7 @@ console.log("API URL:", process.env.REACT_APP_API_URL);
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  baseURL: 'https://cloudservice-o9kh.onrender.com/api',
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -20,11 +20,13 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // Remove this block if CSRF is disabled on backend
+    /*
     let csrfToken = localStorage.getItem("CSRF_TOKEN");
     if (!csrfToken) {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/csrf-token`,
+          'https://cloudservice-o9kh.onrender.com/api/csrf-token',
           { withCredentials: true }
         );
         csrfToken = response.data.token;
@@ -33,11 +35,11 @@ api.interceptors.request.use(
         console.error("Failed to fetch CSRF token", error);
       }
     }
-
     if (csrfToken) {
       config.headers["X-XSRF-TOKEN"] = csrfToken;
     }
-    console.log("X-XSRF-TOKEN " + csrfToken);
+    */
+
     return config;
   },
   (error) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
@@ -24,12 +24,15 @@ import Service from "./components/aboutPage/Service";
 import PrivacyPolicy from "./components/aboutPage/PrivacyPolicy";
 
 
-import FileUploadDownload from "./components/DataUpload/FileUploadDownload";
+
 import FileUpload from "./components/DataUpload/FileUpload";
 import FileDownload from "./components/DataUpload/FileDownload";
 import FileListTable from "./components/DataUpload/FileListTable";
 
+
 const App = () => {
+
+  
   return (
     <Router>
       <Navbar />
@@ -80,7 +83,8 @@ const App = () => {
           element={
             <ProtectedRoute>
               <AllNotes />
-            </ProtectedRoute>
+              </ProtectedRoute>
+           
           }
         />
           <Route

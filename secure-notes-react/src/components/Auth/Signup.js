@@ -51,7 +51,7 @@ const Signup = () => {
     try {
       setLoading(true);
       const response = await api.post("/auth/public/signup", sendData);
-      toast.success("Reagister Successful");
+      toast.success("Register Successful");
       reset();
       if (response.data) {
         navigate("/login");

@@ -14,6 +14,8 @@ const AllNotes = () => {
   const fetchNotes = async () => {
     setLoading(true);
     try {
+      const token=localStorage.getItem("JWT_TOKEN");
+      console.log("Token in Notes: ",token)
       const response = await api.get("/notes");
 
       const parsedNotes = response.data.map((note) => ({

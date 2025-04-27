@@ -12,7 +12,8 @@ const FileUpload = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0); // State for progress bar
-  const SERVER_IP = "http://192.168.149.254:5006";
+  const SERVER_IP = "https://forge-okay-requiring-marriage.trycloudflare.com";  // Replace with your actual server URL
+
   useEffect(() => {
     setPassword(nanoid(4));
   }, []);
@@ -118,8 +119,6 @@ const FileUpload = () => {
             <span className="animate-pulse">Uploading...</span>
           ) : (
             <>
-              
-                
               <span>Upload File</span>
             </>
           )}
