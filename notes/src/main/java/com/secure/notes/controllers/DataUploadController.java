@@ -5,6 +5,7 @@ import com.secure.notes.models.User;
 import com.secure.notes.services.DataUploadService;
 import com.secure.notes.services.UserService;
 import com.secure.notes.services.impl.UserServiceImpl;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class DataUploadController {
     }
 
     @PostMapping("/upload")
+    @Transactional
     public ResponseEntity<?> uploadData(
             @RequestParam String data,
             @RequestParam String dataPassword,

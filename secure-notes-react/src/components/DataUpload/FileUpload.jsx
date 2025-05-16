@@ -12,7 +12,7 @@ const FileUpload = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0); // State for progress bar
-  const SERVER_IP = "https://forge-okay-requiring-marriage.trycloudflare.com";  // Replace with your actual server URL
+  const SERVER_IP = "https://eds-works-forwarding-visited.trycloudflare.com";  // Replace with your actual server URL
 
   useEffect(() => {
     setPassword(nanoid(4));

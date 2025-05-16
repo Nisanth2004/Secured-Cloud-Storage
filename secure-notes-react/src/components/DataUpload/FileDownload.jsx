@@ -9,7 +9,7 @@ const FileDownload = () => {
   const [downloadFileName, setDownloadFileName] = useState("");
   const [fileList, setFileList] = useState([]);
 
-  const SERVER_IP = "https://forge-okay-requiring-marriage.trycloudflare.com";
+  const SERVER_IP = "https://eds-works-forwarding-visited.trycloudflare.com";
 
   useEffect(() => {
     if (currentUser) {
